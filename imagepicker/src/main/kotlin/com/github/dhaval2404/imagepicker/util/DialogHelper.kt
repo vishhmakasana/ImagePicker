@@ -1,13 +1,16 @@
 package com.github.dhaval2404.imagepicker.util
 
 import android.content.Context
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
+import com.deishelon.roundedbottomsheet.RoundedBottomSheetDialog
 import com.github.dhaval2404.imagepicker.R
 import com.github.dhaval2404.imagepicker.constant.ImageProvider
 import com.github.dhaval2404.imagepicker.listener.DismissListener
 import com.github.dhaval2404.imagepicker.listener.ResultListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.security.AccessController.getContext
 
 /**
  * Show Dialog
@@ -23,37 +26,24 @@ internal object DialogHelper {
      *
      */
     fun showChooseAppDialog(
-        context: Context,
-        listener: ResultListener<ImageProvider>,
-        dismissListener: DismissListener?
+        context: Context, listener: ResultListener<ImageProvider>, dismissListener: DismissListener?
     ) {
+        val bottomSheetDialog = RoundedBottomSheetDialog(context)
         val layoutInflater = LayoutInflater.from(context)
         val customView = layoutInflater.inflate(R.layout.dialog_choose_app, null)
-
-        val dialog = AlertDialog.Builder(context)
-            .setTitle(R.string.title_choose_image_provider)
-            .setView(customView)
-            .setOnCancelListener {
-                listener.onResult(null)
-            }
-            .setNegativeButton(R.string.action_cancel) { _, _ ->
-                listener.onResult(null)
-            }
-            .setOnDismissListener {
-                dismissListener?.onDismiss()
-            }
-            .show()
-
-        // Handle Camera option click
         customView.findViewById<View>(R.id.lytCameraPick).setOnClickListener {
             listener.onResult(ImageProvider.CAMERA)
-            dialog.dismiss()
+            bottomSheetDialog.dismiss()
         }
-
-        // Handle Gallery option click
         customView.findViewById<View>(R.id.lytGalleryPick).setOnClickListener {
             listener.onResult(ImageProvider.GALLERY)
-            dialog.dismiss()
+            bottomSheetDialog.dismiss()
         }
+        bottomSheetDialog.setCancelable(true)
+        bottomSheetDialog.setOnCancelListener { listener.onResult(null) }
+        bottomSheetDialog.setOnDismissListener { dismissListener?.onDismiss() }
+        bottomSheetDialog.setContentView(customView)
+        bottomSheetDialog.show()
+
     }
 }
