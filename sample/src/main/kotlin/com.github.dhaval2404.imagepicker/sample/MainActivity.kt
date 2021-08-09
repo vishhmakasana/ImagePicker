@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.github.dhaval2404.imagepicker.constant.ImageProvider
 import com.github.dhaval2404.imagepicker.sample.util.FileUtil
 import com.github.dhaval2404.imagepicker.sample.util.IntentUtil
 import com.github.dhaval2404.imagepicker.util.IntentUtils
@@ -81,9 +82,8 @@ class MainActivity : AppCompatActivity() {
 
     @Suppress("UNUSED_PARAMETER")
     fun pickProfileImage(view: View) {
-        ImagePicker.with(this)
+        ImagePicker.with(this).provider(ImageProvider.BOTH)
             // Crop Square image
-            .galleryOnly()
             .cropSquare()
             .setImageProviderInterceptor { imageProvider -> // Intercept ImageProvider
                 Log.d("ImagePicker", "Selected ImageProvider: " + imageProvider.name)
